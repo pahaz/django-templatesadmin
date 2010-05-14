@@ -79,7 +79,7 @@ TEMPLATESADMIN_TEMPLATE_DIRS = [_fixpath(dir) for dir in TEMPLATESADMIN_TEMPLATE
 
 def user_in_templatesadmin_group(user):
     try:
-        user.is_admin or user.groups.get(name=TEMPLATESADMIN_GROUP)
+        user.is_superuser or user.groups.get(name=TEMPLATESADMIN_GROUP)
         return True
     except ObjectDoesNotExist:
         return False

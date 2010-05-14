@@ -23,13 +23,13 @@ class HgCommitHook(TemplatesAdminHook):
 
         message = form.cleaned_data['commitmessage'] or '--'
 
-        path = None
+        repo_path = None
         for template_dir in settings.TEMPLATE_DIRS:
             if dir.startswith(template_dir):
-                if path is None or len(templare_dir)>len(path):
-                    path = template_dir
-        if path is None:
-            raise TemplatesAdminException("Could not find template base directory")
+                if repo_path is None or len(template_dir)>len(repo_path):
+                    repo_path = template_dir
+        if repo_path is None:
+            raise TemplatesAdminException( _("Could not find template base directory") )
         commit_file = template_path
         if commit_file.startswith(path):
             commit_file = commit_file[len(path):]
