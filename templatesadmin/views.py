@@ -15,7 +15,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.exceptions import ImproperlyConfigured
 from django.template import RequestContext
 
-from templatesadmin.forms import TemplateForm
+from templatesadmin.forms import TemplateForm ,  RichTemplateForm
 from templatesadmin import TemplatesAdminException
 
 # Default settings that may be overriden by global settings (settings.py)
@@ -41,6 +41,12 @@ TEMPLATESADMIN_HIDE_READONLY = getattr(
     settings,
     'TEMPLATESADMIN_HIDE_READONLY',
     False
+)
+
+TEMPLATESADMIN_USE_RICHEDITOR = getattr(
+    settings,
+    'TEMPLATESADMIN_USE_RICHEDITOR',
+    True 
 )
 
 if str == type(TEMPLATESADMIN_EDITHOOKS):
@@ -130,6 +136,7 @@ def modify(request,
            available_template_dirs=TEMPLATESADMIN_TEMPLATE_DIRS):
 
     template_path = path
+    base_form = (TEMPLATESADMIN_USE_RICHEDITOR and RichTemplateForm or TemplateForm)
 
     # Check if file is within template-dirs
     if not any([template_path.startswith(templatedir) for templatedir in available_template_dirs]):
