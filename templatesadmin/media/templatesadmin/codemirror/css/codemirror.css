@@ -1,0 +1,18 @@
+.CodeMirror-wrapping {
+    font-family: Monaco, monospace;
+}
+
+.editbox {
+    font-family: Monaco, monospace;
+}
+
+.CodeMirror-line-numbers {
+    background-color: #EEE;
+    color: #AAA;
+    font-family: Monaco, monospace;
+    font-size: 10pt;
+    padding-right: 0.3em;
+    padding-top: 0.4em;
+    text-align: right;
+    width: 2.2em;
+}

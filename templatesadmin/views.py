@@ -212,7 +212,8 @@ def modify(request,
             formclass.base_fields.update(hook.contribute_to_form(template_path))
 
         form = formclass(
-            initial={'content': template_file}
+            initial={'content': template_file},
+            widget_syntax = os.path.splitext(path)[1][1:]
         )
 
     template_context = {

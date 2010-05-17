@@ -6,7 +6,7 @@ from django.utils.html       import escape, conditional_escape
 from django.utils.encoding   import StrAndUnicode, force_unicode
 
 from django.forms.util import flatatt
-from urlparse import urljoin
+from urlparse import urljoin 
 
 class CodeMirrorEditor( forms.Textarea ):
     """
@@ -18,13 +18,12 @@ class CodeMirrorEditor( forms.Textarea ):
 
     CODEEDITOR_JS = """
 <script type="text/javascript">
-    var window.onload = function(e){
-        var editor_%(name)s = CodeMirror.fromTextArea('%(name)s', {
-            path: "%(CODEEDITOR_MEDIA_URL)s",
-            width: "%(width)s",
+    window.onload = function(e){
+        var editor_%(name)s = CodeMirror.fromTextArea('id_%(name)s', {
+            path: "%(CODEEDITOR_MEDIA_URL)sjs/",
             height: "%(height)s",
             autoMatchParens:  true,
-            parserFile: %(parserFiles)s,
+            parserfile: %(parserFiles)s,
             stylesheet: %(stylesheets)s,
             lineNumbers: true,
             indentUnit: 4,
@@ -37,12 +36,13 @@ class CodeMirrorEditor( forms.Textarea ):
     SYNTAXES  = {
               'css':   (('parsecss.js',),('csscolors.css',)),
               'html':  (("parsexml.js", "parsecss.js", "tokenizejavascript.js", "parsejavascript.js", "parsehtmlmixed.js"), ('xmlcolors.css','jscolors.css','csscolors.css',)),
-              'dummy': (('parsedummy.js',), ('dummy.css',))
+              'js':    (("parsejavascript.js","tokenizejavascript.js"), ('jscolors.css',)),
+              'dummy': (("parsedummy.js",), ('dummy.css',))
              }
 
     editor_attrs = {
-                    'CODEEDITOR_MEDIA_URL': urljoin( settings.MEDIA_URL , 'templatesadmin/codemirror' ),
-                    'syntax': 'dummy',
+                    'CODEEDITOR_MEDIA_URL': urljoin( settings.MEDIA_URL , 'templatesadmin/codemirror/' ),
+                    'syntax': 'html',
                     'indentUnit': '4',
                     'autoMatchParens': 'True',  
                     'lineNumbers': 'True',
@@ -80,13 +80,14 @@ class CodeMirrorEditor( forms.Textarea ):
             syntax = u'dummy'
 
         codemedia_url = self.editor_attrs['CODEEDITOR_MEDIA_URL']
-        parserfiles = unicode([conditional_escape("%s/js/%s" % (codemedia_url,f))  for f in self.SYNTAXES[syntax][0] ])
-        stylesheets = unicode([conditional_escape("%s/css/%s" % (codemedia_url,f)) for f in self.SYNTAXES[syntax][1] ])
+        parserfiles = unicode([str(conditional_escape(urljoin(codemedia_url, "js/%s" % f))) for f in self.SYNTAXES[syntax][0] ])
+        stylesheets = unicode([str(conditional_escape(urljoin(codemedia_url, "css/%s" % f))) for f in self.SYNTAXES[syntax][1] ])
 
         return parserfiles , stylesheets
 
     def _media(self):
-        return forms.Media( js=( urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'] , '/js/codemirror.js') ,) )
+        return forms.Media( js=( urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'] , 'js/codemirror.js') ,),
+                            css={ 'all': (urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'] , 'css/codemirror.css'), )})
 
     syntax = property(_syntax)
     media  = property(_media)
