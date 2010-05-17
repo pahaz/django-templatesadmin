@@ -23,9 +23,9 @@ Installation:
    able to edit templates. You don't need to grant any permissions to that group.
    Just call it ``TemplateAdmins``.
    
-   Admins do not need to belong in this group. The group name is case-sensitive!
+   Admins don't need to belong this group. The group name is case-sensitive!
 
-4. Make ``media/templatesadmin/`` available your MEDIA_PATH.
+4. Make ``media/templatesadmin/`` available in your MEDIA_PATH.
 
 5. Point your webbrowser to ``http://localhost/admin/templatesadmin/`` and start 
    editing.
@@ -59,7 +59,8 @@ There are some settings that you can override in your ``settings.py``:
 
    Default: All user-defined and application template-dirs.
 
-4. ``TEMPLATEADMIN_USE_RICHEDITOR``: A boolean to use the rich CodeMirror(``http://marijn.haverbeke.nl/codemirror/``) editor.
+4. ``TEMPLATEADMIN_USE_RICHEDITOR``: A boolean to use rich CodeMirror -  
+``http://marijn.haverbeke.nl/codemirror/`` editor.
     
     Default: ``True``
 
