@@ -22,7 +22,7 @@ from templatesadmin import TemplatesAdminException
 TEMPLATESADMIN_VALID_FILE_EXTENSIONS = getattr(
     settings,
     'TEMPLATESADMIN_VALID_FILE_EXTENSIONS',
-    ('html', 'htm', 'txt', 'css', 'backup',)
+    ('html', 'htm', 'txt', 'js', 'css', 'backup',)
 )
 
 TEMPLATESADMIN_GROUP = getattr(
@@ -200,7 +200,7 @@ def modify(request,
     else:
         template_file = codecs.open(template_path, 'r', 'utf-8').read()
 
-        formclass = TemplateForm
+        formclass = base_form 
         for hook in TEMPLATESADMIN_EDITHOOKS:
             formclass.base_fields.update(hook.contribute_to_form(template_path))
 
