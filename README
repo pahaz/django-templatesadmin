@@ -23,10 +23,11 @@ Installation:
    able to edit templates. You don't need to grant any permissions to that group.
    Just call it ``TemplateAdmins``.
    
-   Keep in mind that also Superusers (*is_admin* flag) must belong to this group, if
-   they should been able to edit templates. The group name is case-sensitive!
-   
-4. Point your webbrowser to ``http://localhost/admin/templatesadmin/`` and start 
+   Admins do not need to belong in this group. The group name is case-sensitive!
+
+4. Make ``media/templatesadmin/`` available your MEDIA_PATH.
+
+5. Point your webbrowser to ``http://localhost/admin/templatesadmin/`` and start 
    editing.
    
 Optional Settings:
@@ -48,6 +49,7 @@ There are some settings that you can override in your ``settings.py``:
         'html', 
         'htm', 
         'txt', 
+        'js',
         'css', 
         'backup'
     )
@@ -57,12 +59,16 @@ There are some settings that you can override in your ``settings.py``:
 
    Default: All user-defined and application template-dirs.
 
-4. ``TEMPLATESADMIN_HIDE_READONLY``: A boolean to wether enable or disable
+4. ``TEMPLATEADMIN_USE_RICHEDITOR``: A boolean to use the rich CodeMirror(``http://marijn.haverbeke.nl/codemirror/``) editor.
+    
+    Default: ``True``
+
+5. ``TEMPLATESADMIN_HIDE_READONLY``: A boolean to wether enable or disable
    displaying of read-only templates.
    
    Default: ``False``
 
-5. ``TEMPLATESADMIN_EDITHOOKS``: A tuple of callables edithooks. Edithooks are
+6. ``TEMPLATESADMIN_EDITHOOKS``: A tuple of callables edithooks. Edithooks are
    a way to interact with changes made on a template. Think of a plugin system.
 
    There are two builtin edithooks:
