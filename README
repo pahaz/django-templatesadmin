@@ -80,7 +80,8 @@ There are some settings that you can override in your ``settings.py``:
      version control.
    - ``hgcommit.HgCommitHook``: Creates a `mercurial
      <http://www.selenic.com/mercurial/>`_ commit after saving.
-
+   - ``svncommit.SvnCommitHook``: Commits your templates after saving
+     via ``svn``.
 
    You can define your own edithooks, see above hooks as example. 
    
