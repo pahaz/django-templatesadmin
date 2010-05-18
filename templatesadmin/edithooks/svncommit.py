@@ -6,12 +6,12 @@ from templatesadmin.edithooks import TemplatesAdminHook
 
 import pysvn
 import os
+import tempfile
 
 class SvnCommitHook( TemplatesAdminHook ):
     '''
         Commit to svn after saving
     '''
-
 
     @classmethod
     def post_save(cls, request, form, template_path):
@@ -22,8 +22,13 @@ class SvnCommitHook( TemplatesAdminHook ):
         else:
             author = request.user.username
 
-        message = (form.cleaned_data['commitmessage'] or '--') + '\n'
-        message += '\n'
+        # Write commit-message to a temp-file
+        commit_tmp_file =  tempfile.NamedTemporaryFile()
+        commit_file     =  commit_tmp_file.name
+
+        message = (form.cleaned_data['commitmessage'] or '--') + (2*'\n')
+        commit_file.write( message )
+        commit_file.flush()
 
         # Get path for repository
         repo_path = None
@@ -41,7 +46,7 @@ class SvnCommitHook( TemplatesAdminHook ):
                 commit_file = commit_file[1:]
 
         svn = pysvn.Client() 
-        svn.checkin( [str(commit_file)], message)
+        svn.checkin( [str(commit_file)], message )
 
     @classmethod
     def contribute_to_form(cls, template_path):
