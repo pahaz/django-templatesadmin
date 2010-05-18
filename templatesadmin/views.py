@@ -148,7 +148,10 @@ def modify(request,
         for hook in TEMPLATESADMIN_EDITHOOKS:
             formclass.base_fields.update(hook.contribute_to_form(template_path))
 
-        form = formclass(request.POST)
+        form = formclass(
+                data=request.POST,
+                widget_syntax = os.path.splitext(path)[1][1:]
+        )
         if form.is_valid():
             content = form.cleaned_data['content']
 

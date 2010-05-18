@@ -4,9 +4,8 @@ from django.utils.translation import ugettext_lazy as _
 from templatesadmin import TemplatesAdminException
 from templatesadmin.edithooks import TemplatesAdminHook
 
-import pysvn
-import os
-import tempfile
+import os,re
+import tempfile , subprocess
 
 class SvnCommitHook( TemplatesAdminHook ):
     '''
@@ -22,31 +21,44 @@ class SvnCommitHook( TemplatesAdminHook ):
         else:
             author = request.user.username
 
+        # Avoid svn complaining about mixed dos(crlf) and unix(lf) line-ending 
+        message = re.sub('\r\n', '\n', (form.cleaned_data['commitmessage'] or '--') )
+
         # Write commit-message to a temp-file
-        commit_tmp_file =  tempfile.NamedTemporaryFile()
-        commit_file     =  commit_tmp_file.name
+        commit_tmp_file     =  tempfile.NamedTemporaryFile()
+        try:
+            commit_msg_file     =  commit_tmp_file.name
 
-        message = (form.cleaned_data['commitmessage'] or '--') + (2*'\n')
-        commit_file.write( message )
-        commit_file.flush()
+            message = (message + '\nCommited in admin by: ' + author ).encode('utf-8')
+            commit_tmp_file.write( message )
+            commit_tmp_file.flush()
 
-        # Get path for repository
-        repo_path = None
-        for template_dir in settings.TEMPLATE_DIRS:
-            if dir.startswith(template_dir):
-                if repo_path is None or len(template_dir) > len(repo_path):
-                    repo_path = template_dir
-        if repo_path is None:
-            raise TemplatesAdminException(_("Could not find template base directory") )
+            # Stolen from gitpython's git/cmd.py
+            command = 'svn commit -F %(commit_msg_file)s %(file)s' % locals()
+            proc = subprocess.Popen(
+                args=command,
+                shell=True,
+                cwd=dir,
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
 
-        commit_file = template_path
-        if commit_file.startswith(repo_path):
-            commit_file = commit_file[len(repo_path):]
-            if commit_file.startswith("/"):
-                commit_file = commit_file[1:]
+            try:
+                stderr_value = proc.stderr.read()
+                stdout_value = proc.stdout.read()
+                status = proc.wait()
+            finally:
+                proc.stderr.close()
 
-        svn = pysvn.Client() 
-        svn.checkin( [str(commit_file)], message )
+            if status != 0:
+                raise TemplatesAdminException("Error while executing %s: %s" % (command, stderr_value.rstrip(), ))
+
+            return stdout_value.rstrip()
+
+        finally:
+            # Close and delete commit-message file. 
+            commit_tmp_file.close()
 
     @classmethod
     def contribute_to_form(cls, template_path):
