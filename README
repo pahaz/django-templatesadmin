@@ -72,7 +72,7 @@ There are some settings that you can override in your ``settings.py``:
 6. ``TEMPLATESADMIN_EDITHOOKS``: A tuple of callables edithooks. Edithooks are
    a way to interact with changes made on a template. Think of a plugin system.
 
-   There are two builtin edithooks:
+   There are four builtin edithooks:
    
    - ``dotbackupfiles.DotBackupFilesHook``: Creates a copy of the original file
      before overwriting, naming it ``<oldname>.backup``.
