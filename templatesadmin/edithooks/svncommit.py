@@ -19,7 +19,7 @@ class SvnCommitHook( TemplatesAdminHook ):
 
         if request.user.first_name and request.user.last_name and request.user.email:
             author = "%s %s <%s>" % ( request.user.first_name , request.user.last_name , request.user.email )
-        else
+        else:
             author = request.user.username
 
         message = (form.cleaned_data['commitmessage'] or '--') + '\n'
@@ -46,7 +46,7 @@ class SvnCommitHook( TemplatesAdminHook ):
     @classmethod
     def contribute_to_form(cls, template_path):
         return dict(commitmessage=forms.CharField(
-            widget=forms.TextInput(attrs={'size': '100'}),
-            label = _("Change message"),
-            required = False
+            widget=forms.Textarea(attrs={'rows': '5', 'cols': '40'}),
+            label = _("Change message:"),
+            required = True 
         ))

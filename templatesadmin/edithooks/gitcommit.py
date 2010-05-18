@@ -59,7 +59,7 @@ class GitCommitHook(TemplatesAdminHook):
     @classmethod
     def contribute_to_form(cls, template_path):
         return dict(commitmessage=forms.CharField(
-            widget=forms.TextInput(attrs={'size':'100'}),
-            label = _('Change message'),
-            required = False,
+            widget=forms.Textarea(attrs={'rows':'5', 'cols': '40'}),
+            label = _('Change message:'),
+            required = True,
         ))
