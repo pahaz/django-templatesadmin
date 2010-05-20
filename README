@@ -15,19 +15,15 @@ Installation:
 
 1. Put ``templatesadmin`` into your INSTALLED_APPS setting.
 
-2. Add this line to your urlconf but **before** your admin include::
-    
-    (r'^admin/templatesadmin/', include('templatesadmin.urls')),
-
-3. Create a group ``TemplateAdmins`` and put all users in there, who should been
+2. Create a group ``TemplateAdmins`` and put all users in there, who should been
    able to edit templates. You don't need to grant any permissions to that group.
    Just call it ``TemplateAdmins``.
    
    Admins don't need to belong this group. The group name is case-sensitive!
 
-4. Make ``media/templatesadmin/`` available in your MEDIA_PATH.
+3. Make ``media/templatesadmin/`` available in your MEDIA_PATH.
 
-5. Point your webbrowser to ``http://localhost/admin/templatesadmin/`` and start 
+4. Point your webbrowser to ``http://localhost/admin/templatesadmin/`` and start 
    editing.
    
 Optional Settings:
