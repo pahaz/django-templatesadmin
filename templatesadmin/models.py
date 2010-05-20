@@ -1,11 +1,13 @@
 from django.db import models
 from django.core.exceptions import SuspiciousOperation
 
-class FakeTemplateModel(models.Model):
+class FTemplate(models.Model):
     """
         Faking a model to use templatesadmin in
         admin site (without other hacks). I hack here
-        to avoid the user to hack forward...
+        to avoid the user to hack forward. 
+
+        The name FTemplate avoid ugly-url (FakedTemplateModel)
     """
     class Meta:
         verbose_name , verbose_name_plural = "Template" , "Templates"

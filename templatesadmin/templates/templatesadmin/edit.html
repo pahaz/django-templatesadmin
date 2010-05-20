@@ -24,9 +24,10 @@
 
 {% block breadcrumbs %}
 <div class="breadcrumbs">
-    <a href="{% url templatesadmin-overview %}">{% trans "Home" %}</a> &rsaquo;
-    <a href="{% url templatesadmin-overview %}">{% trans "File selection" %}</a> &rsaquo;
-    {{ template_path }}
+     <a href="{% url admin:index %}">{% trans "Home" %}</a> &rsaquo;
+     <a href="{% url admin:app_list 'templatesadmin' %}">{{ opts.verbose_name_plural|capfirst }}</a> &rsaquo;
+     <a href="{% url admin:templatesadmin_ftemplate_changelist %}">{{ opts.app_label|capfirst }}</a> &rsaquo;
+     {{ template_path }}
 </div>
 {% endblock %}
 
@@ -41,6 +42,7 @@
 {% block content %}
 <div id="content-main">
     <form enctype="multipart/form-data" action="" method="post" id="site_form">
+        {% csrf_token %}
         <div>
             {{ form.errors }}
             {{ form.content }}

@@ -16,6 +16,7 @@ from django.core.exceptions import ImproperlyConfigured
 from django.template import RequestContext
 
 from templatesadmin.forms import TemplateForm ,  RichTemplateForm
+from templatesadmin.models import FTemplate 
 from templatesadmin import TemplatesAdminException
 
 # Default settings that may be overriden by global settings (settings.py)
@@ -73,6 +74,7 @@ TEMPLATESADMIN_EDITHOOKS = tuple(_hooks)
 
 _fixpath = lambda path: os.path.abspath(os.path.normpath(path))
 
+# Load all templates (recursively)
 TEMPLATESADMIN_TEMPLATE_DIRS = getattr(
     settings,
     'TEMPLATESADMIN_TEMPLATE_DIRS', [
@@ -80,7 +82,6 @@ TEMPLATESADMIN_TEMPLATE_DIRS = getattr(
         list(app_template_dirs) if os.path.isdir(d)
     ]
 )
-
 TEMPLATESADMIN_TEMPLATE_DIRS = [_fixpath(dir) for dir in TEMPLATESADMIN_TEMPLATE_DIRS]
 
 def user_in_templatesadmin_group(user):
@@ -123,6 +124,7 @@ def listing(request,
     template_context = {
         'messages': request.user.get_and_delete_messages(),
         'template_dict': template_dict,
+        'opts': FTemplate._meta,
         'ADMIN_MEDIA_PREFIX': settings.ADMIN_MEDIA_PREFIX,
     }
 
@@ -141,7 +143,7 @@ def modify(request,
     # Check if file is within template-dirs
     if not any([template_path.startswith(templatedir) for templatedir in available_template_dirs]):
         request.user.message_set.create(message=_('Sorry, that file is not available for editing.'))
-        return HttpResponseRedirect(reverse('templatesadmin-overview'))
+        return HttpResponseRedirect(reverse('admin:templatesadmin_ftemplate_changelist'))
 
     if request.method == 'POST':
         formclass = base_form
@@ -206,7 +208,7 @@ def modify(request,
             request.user.message_set.create(
                 message=_('Template "%s" was saved successfully.' % path)
             )
-            return HttpResponseRedirect(reverse('templatesadmin-overview'))
+            return HttpResponseRedirect(reverse('admin:templatesadmin_ftemplate_changelist'))
     else:
         template_file = codecs.open(template_path, 'r', 'utf-8').read()
 
@@ -224,6 +226,7 @@ def modify(request,
         'form': form,
         'short_path': path,
         'template_path': path,
+        'opts': FTemplate._meta,
         'template_writeable': os.access(template_path, os.W_OK),
         'ADMIN_MEDIA_PREFIX': settings.ADMIN_MEDIA_PREFIX,
     }

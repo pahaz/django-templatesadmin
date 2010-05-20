@@ -1,5 +1,6 @@
 from os import path
 from django.template import Library
+from django.core.urlresolvers import reverse
 
 register = Library()
 
