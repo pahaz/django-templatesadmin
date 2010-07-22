@@ -80,7 +80,7 @@ class CodeMirrorEditor( forms.Textarea ):
             syntax = u'dummy'
 
         codemedia_url = self.editor_attrs['CODEEDITOR_MEDIA_URL']
-        parserfiles = unicode([str(conditional_escape(urljoin(codemedia_url, "js/%s" % f))) for f in self.SYNTAXES[syntax][0] ])
+        parserfiles = unicode([str(conditional_escape(f)) for f in self.SYNTAXES[syntax][0] ])
         stylesheets = unicode([str(conditional_escape(urljoin(codemedia_url, "css/%s" % f))) for f in self.SYNTAXES[syntax][1] ])
 
         return parserfiles , stylesheets
