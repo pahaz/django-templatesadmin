@@ -97,7 +97,7 @@ See ``LICENSE`` for details.
 Changelog:
 ==========
 
-**v0.65 (20010-05-19)**
+**v0.65 (2010-05-19)**
 
 * Django 1.2 ready
 * Included Rich code editor (http://marijn.haverbeke.nl/codemirror/) with automatically
