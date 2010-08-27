@@ -137,7 +137,7 @@ def modify(request,
            base_form=TemplateForm,
            available_template_dirs=TEMPLATESADMIN_TEMPLATE_DIRS):
 
-    template_path = path
+    template_path = _fixpath(path)
     base_form = (TEMPLATESADMIN_USE_RICHEDITOR and RichTemplateForm or TemplateForm)
 
     # Check if file is within template-dirs
