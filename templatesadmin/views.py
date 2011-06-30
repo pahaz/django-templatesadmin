@@ -4,16 +4,17 @@ from datetime import datetime
 from stat import ST_MTIME, ST_CTIME
 from re import search
 
-from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect, HttpResponseForbidden
-from django.utils.translation import ugettext as _
-from django.shortcuts import render_to_response
 from django.conf import settings
-from django.template.loaders.app_directories import app_template_dirs
-from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.exceptions import ImproperlyConfigured
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
+from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.template.loaders.app_directories import app_template_dirs
+from django.utils.translation import ugettext as _
+from django.views.decorators.cache import never_cache
 
 from templatesadmin.forms import TemplateForm ,  RichTemplateForm
 from templatesadmin.models import FTemplate 
@@ -91,8 +92,7 @@ def user_in_templatesadmin_group(user):
     except ObjectDoesNotExist:
         return False
 
-@login_required
-@user_passes_test(lambda u: user_in_templatesadmin_group(u))
+@never_cache
 def listing(request,
              template_name='templatesadmin/overview.html',
              available_template_dirs=TEMPLATESADMIN_TEMPLATE_DIRS):
@@ -130,7 +130,7 @@ def listing(request,
 
     return render_to_response(template_name, template_context,
                               RequestContext(request))
-
+@never_cache
 def modify(request,
            path,
            template_name='templatesadmin/edit.html',
