@@ -4,7 +4,7 @@ from templatesadmin import TemplatesAdminException
 from templatesadmin.edithooks import TemplatesAdminHook
 
 import subprocess
-import os
+import os, sys
 
 class GitCommitHook(TemplatesAdminHook):
     '''
@@ -22,19 +22,22 @@ class GitCommitHook(TemplatesAdminHook):
 
         message = form.cleaned_data['commitmessage'] or '--'
 
+        enc = 'utf-8'
+
         command = (
-            'GIT_COMMITTER_NAME="%(author)s" GIT_COMMITER_EMAIL="%(email)s" '
-            'GIT_AUTHOR_NAME="%(author)s" GIT_AUTHOR_EMAIL="%(email)s" '
-            'git commit -F - -- %(file)s'
+            'git commit -F - '
+            '--author "%(author)s <%(email)s>" '
+            '-- %(file)s '
         ) % {
           'file': template_path,
           'author': author,
           'email': request.user.email,
         }
 
+
         # Stolen from gitpython's git/cmd.py
         proc = subprocess.Popen(
-            args=command,
+            args=command.encode(enc),
             shell=True,
             cwd=dir,
             stdin=subprocess.PIPE,
@@ -43,7 +46,7 @@ class GitCommitHook(TemplatesAdminHook):
         )
 
         try:
-            proc.stdin.write(message.encode('utf-8'))
+            proc.stdin.write(message.encode(enc))
             proc.stdin.close()
             stderr_value = proc.stderr.read()
             stdout_value = proc.stdout.read()
@@ -52,9 +55,9 @@ class GitCommitHook(TemplatesAdminHook):
             proc.stderr.close()
 
         if status != 0:
-            raise TemplatesAdminException("Error while executing %s: %s" % (command, stderr_value.rstrip(), ))
+            raise TemplatesAdminException("Error while executing %s: %s" % (command, stderr_value.decode(enc).rstrip(), ))
 
-        return stdout_value.rstrip()
+        return stdout_value.rstrip().decode(enc)
 
     @classmethod
     def contribute_to_form(cls, template_path):

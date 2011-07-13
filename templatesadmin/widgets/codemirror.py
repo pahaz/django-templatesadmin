@@ -41,7 +41,7 @@ class CodeMirrorEditor( forms.Textarea ):
              }
 
     editor_attrs = {
-                    'CODEEDITOR_MEDIA_URL': urljoin( settings.MEDIA_URL , 'templatesadmin/codemirror/' ),
+                    'CODEEDITOR_MEDIA_URL': urljoin( settings.STATIC_URL , 'templatesadmin/codemirror/' ),
                     'syntax': 'html',
                     'indentUnit': '4',
                     'autoMatchParens': 'True',  

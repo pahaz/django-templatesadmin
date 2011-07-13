@@ -1,6 +1,6 @@
 {% extends "templatesadmin/base.html" %}
 
-{% load i18n adminmedia %}
+{% load i18n %}
 {% load templatesadmin_tags %}
 
 {% block breadcrumbs %}
@@ -39,8 +39,8 @@
         {% endifchanged %}
                 <tr class="{% cycle row1,row2 %}">
                     <td style="width: 99%;">
-                        {% if not template.writeable %}<img src="{% admin_media_prefix %}img/admin/icon-no.gif" alt="{% trans "(read only)" %}" title="{% trans "This template is not writeable." %}" />{% endif %}
-                        <a href="{% url admin:templatesadmin_ftemplate_change template.abspath  %}">{{ template.abspath|shortenfilepath }}</a></td>
+                        {% if not template.writeable %}<img src="{{ STATIC_URL }}admin/img/icon-no.gif" alt="{% trans "(read only)" %}" title="{% trans "This template is not writeable." %}" />{% endif %}
+                        <a href="{% url admin:templatesadmin_ftemplate_change template.abspath %}">{{ template.abspath|shortenfilepath }}</a></td>
                     <td style="white-space: nowrap;" class="r">{{ template.modified|date:_("DATETIME_FORMAT") }}</td>
                 </tr>
     {% endfor %}

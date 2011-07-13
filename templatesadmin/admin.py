@@ -44,8 +44,8 @@ class TemplatesAdmin(admin.ModelAdmin):
         # This is copied on admin.py. 
         urlpatterns = patterns('',
             url(r'^$',                          wrap(self.changelist_view),     name='templatesadmin_ftemplate_changelist'), 
-            url(r'^add',                        wrap(self.add_view),            name='templatesadmin_ftemplate_add'), 
-            url(r'^edit(?P<object_id>.*)/$',    wrap(self.change_view),         name='templatesadmin_ftemplate_change'), 
+            url(r'^add/',                        wrap(self.add_view),            name='templatesadmin_ftemplate_add'), 
+            url(r'^edit/(?P<object_id>.*)/$',    wrap(self.change_view),         name='templatesadmin_ftemplate_change'), 
         ) 
 
         return urlpatterns

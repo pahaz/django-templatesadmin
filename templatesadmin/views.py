@@ -19,6 +19,7 @@ from django.views.decorators.cache import never_cache
 from templatesadmin.forms import TemplateForm ,  RichTemplateForm
 from templatesadmin.models import FTemplate 
 from templatesadmin import TemplatesAdminException
+from django.contrib import messages
 
 # Default settings that may be overriden by global settings (settings.py)
 TEMPLATESADMIN_VALID_FILE_EXTENSIONS = getattr(
@@ -122,10 +123,9 @@ def listing(request,
                         template_dict = (l,)
 
     template_context = {
-        'messages': request.user.get_and_delete_messages(),
+        'messages': messages.get_messages(request),
         'template_dict': template_dict,
         'opts': FTemplate._meta,
-        'ADMIN_MEDIA_PREFIX': settings.ADMIN_MEDIA_PREFIX,
     }
 
     return render_to_response(template_name, template_context,
@@ -142,7 +142,7 @@ def modify(request,
 
     # Check if file is within template-dirs
     if not any([template_path.startswith(templatedir) for templatedir in available_template_dirs]):
-        request.user.message_set.create(message=_('Sorry, that file is not available for editing.'))
+        messages.error(request, message=_('Sorry, that file is not available for editing.'))
         return HttpResponseRedirect(reverse('admin:templatesadmin_ftemplate_changelist'))
 
     if request.method == 'POST':
@@ -161,9 +161,9 @@ def modify(request,
                 for hook in TEMPLATESADMIN_EDITHOOKS:
                     pre_save_notice = hook.pre_save(request, form, template_path)
                     if pre_save_notice:
-                        request.user.message_set.create(message=pre_save_notice)
+                        messages.warning(request, message=pre_save_notice)
             except TemplatesAdminException, e:
-                request.user.message_set.create(message=e.message)
+                messages.error(request, message=e.message)
                 return HttpResponseRedirect(request.build_absolute_uri())
 
             # Save the template
@@ -188,7 +188,7 @@ def modify(request,
                 f.write(content)
                 f.close()
             except IOError, e:
-                request.user.message_set.create(
+                messages.error(request, 
                     message=_('Template "%(path)s" has not been saved! Reason: %(errormsg)s' % {
                         'path': path,
                         'errormsg': e
@@ -200,12 +200,12 @@ def modify(request,
                 for hook in TEMPLATESADMIN_EDITHOOKS:
                     post_save_notice = hook.post_save(request, form, template_path)
                     if post_save_notice:
-                        request.user.message_set.create(message=post_save_notice)
+                        messages.warning(request, message=post_save_notice)
             except TemplatesAdminException, e:
-                request.user.message_set.create(message=e.message)
+                messages.error(request, message=e.message)
                 return HttpResponseRedirect(request.build_absolute_uri())
 
-            request.user.message_set.create(
+            messages.success(request, 
                 message=_('Template "%s" was saved successfully.' % path)
             )
             return HttpResponseRedirect(reverse('admin:templatesadmin_ftemplate_changelist'))
@@ -222,13 +222,12 @@ def modify(request,
         )
 
     template_context = {
-        'messages': request.user.get_and_delete_messages(),
+        'messages': messages.get_messages(request),
         'form': form,
         'short_path': path,
         'template_path': path,
         'opts': FTemplate._meta,
         'template_writeable': os.access(template_path, os.W_OK),
-        'ADMIN_MEDIA_PREFIX': settings.ADMIN_MEDIA_PREFIX,
     }
 
     return render_to_response(template_name, template_context,
