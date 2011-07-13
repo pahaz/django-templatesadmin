@@ -22,13 +22,13 @@ class DotBackupFilesHook(TemplatesAdminHook):
             copy(template_path, '%s.backup' % template_path)
         except IOError, e:
             raise TemplatesAdminException(
-                _(u'Backup Template "%(path)s" has not been saved! Reason: %(errormsg)s' % {
+                _(u'Backup Template "%(path)s" has not been saved! Reason: %(errormsg)s') % {
                     'path': template_path,
                     'errormsg': e
-                })
+                }
             )
 
-        return "Backup \'%s.backup\' has been saved." % template_path
+        return _("Backup \'%s.backup\' has been saved.") % template_path
 
     @classmethod
     def contribute_to_form(cls, template_path):

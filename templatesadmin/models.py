@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.exceptions import SuspiciousOperation
+from django.utils.translation import ugettext as _
 
 class FTemplate(models.Model):
     """
@@ -10,7 +11,7 @@ class FTemplate(models.Model):
         The name FTemplate avoid ugly-url (FakedTemplateModel)
     """
     class Meta:
-        verbose_name , verbose_name_plural = "Template" , "Templates"
+        verbose_name , verbose_name_plural = _("Template") , _("Templates")
         managed = False
 
     def save(self, *args, **kwargs):

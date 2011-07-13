@@ -52,7 +52,7 @@ class HgCommitHook(TemplatesAdminHook):
         filter = match.match(repo.root, dir, [file])
         repo.commit(match=filter, text=message, user="%s <%s>" % (author, request.user.email))
 
-        return "Template '%s' was committed succesfully into mercurial repository." % file
+        return _("Template '%s' was committed succesfully into mercurial repository.") % file
 
     @classmethod
     def contribute_to_form(cls, template_path):

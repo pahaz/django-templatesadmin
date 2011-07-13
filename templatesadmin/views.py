@@ -189,10 +189,10 @@ def modify(request,
                 f.close()
             except IOError, e:
                 messages.error(request, 
-                    message=_('Template "%(path)s" has not been saved! Reason: %(errormsg)s' % {
+                    message=_('Template "%(path)s" has not been saved! Reason: %(errormsg)s') % {
                         'path': path,
                         'errormsg': e
-                    })
+                    }
                 )
                 return HttpResponseRedirect(request.build_absolute_uri())
 
@@ -200,7 +200,7 @@ def modify(request,
                 for hook in TEMPLATESADMIN_EDITHOOKS:
                     post_save_notice = hook.post_save(request, form, template_path)
                     if post_save_notice:
-                        messages.warning(request, message=post_save_notice)
+                        messages.info(request, message=post_save_notice)
             except TemplatesAdminException, e:
                 messages.error(request, message=e.message)
                 return HttpResponseRedirect(request.build_absolute_uri())

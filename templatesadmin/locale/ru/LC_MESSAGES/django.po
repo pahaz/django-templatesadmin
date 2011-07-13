@@ -1,0 +1,124 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-07-13 20:05+0700\n"
+"PO-Revision-Date: 2011-07-13 20:05\n"
+"Last-Translator: <burchik@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
+"X-Translated-Using: django-transhette 0.1.SVN\n"
+
+#: .\admin.py:19
+msgid "You can't create new template's by admin interface. Try using the console."
+msgstr "Вы не можете создать новый шаблон из интерфейса администратора. "
+
+#: .\admin.py:22
+msgid "You can't delete templates by admin. Try using the console."
+msgstr "Вы не можете удалять шаблоны из интерфейса администратора."
+
+#: .\models.py:14
+msgid "Template"
+msgstr "Шаблон"
+
+#: .\models.py:14
+msgid "Templates"
+msgstr "Шаблоны"
+
+#: .\views.py:145
+msgid "Sorry, that file is not available for editing."
+msgstr "Извините, этот файл не доступен для редактирования."
+
+#: .\views.py:192
+#, python-format
+msgid "Template \"%(path)s\" has not been saved! Reason: %(errormsg)s"
+msgstr "Шаблон \"%(path)s\" не был сохранен! Причина: %(errormsg)s"
+
+#: .\views.py:209
+#, python-format
+msgid "Template \"%s\" was saved successfully."
+msgstr "Шаблон \"%s\" был успешно сохранен."
+
+#: .\edithooks\dotbackupfiles.py:25
+#, python-format
+msgid "Backup Template \"%(path)s\" has not been saved! Reason: %(errormsg)s"
+msgstr "Резервная копия шаблона \"%(path)s\" не была сохранена! Причина: %(errormsg)s"
+
+#: .\edithooks\dotbackupfiles.py:31
+#, python-format
+msgid "Backup '%s.backup' has been saved."
+msgstr "Резервная копия \"%s.backup\" была сохранена."
+
+#: .\edithooks\dotbackupfiles.py:36
+msgid "Backup file before saving?"
+msgstr "Сделать резервное копирование файла перед сохранением?"
+
+#: .\edithooks\gitcommit.py:59 .\edithooks\svncommit.py:56
+#, python-format
+msgid "Error while executing %(command)s: %(msg)s"
+msgstr "Ошибка при выполнении%(command)s: %(msg)s"
+
+#: .\edithooks\gitcommit.py:69 .\edithooks\hgcommit.py:61
+#: .\edithooks\svncommit.py:70
+msgid "Change message:"
+msgstr "Изменить сообщение:"
+
+#: .\edithooks\hgcommit.py:41
+msgid "Could not find template base directory"
+msgstr "Не удалось найти базовый каталог шаблона"
+
+#: .\edithooks\hgcommit.py:55
+#, python-format
+msgid "Template '%s' was committed succesfully into mercurial repository."
+msgstr "Шаблон '%s' был совершен успешно в репозиторий Mercurial."
+
+#: .\templates\templatesadmin\edit.html.py:27
+#: .\templates\templatesadmin\overview.html.py:8
+msgid "Home"
+msgstr "Начало"
+
+#: .\templates\templatesadmin\edit.html.py:35
+#: .\templates\templatesadmin\edit.html.py:39
+msgid "Edit Template:"
+msgstr "Изменить шаблон:"
+
+#: .\templates\templatesadmin\edit.html.py:57
+msgid "Save"
+msgstr "Сохранить"
+
+#: .\templates\templatesadmin\edit.html.py:62
+#: .\templates\templatesadmin\overview.html.py:42
+msgid "This template is not writeable."
+msgstr "Этот шаблон не доступен для записи."
+
+#: .\templates\templatesadmin\overview.html.py:10
+msgid "File Selection"
+msgstr "Выбор файла"
+
+#: .\templates\templatesadmin\overview.html.py:17
+msgid "Templatesadmin Overview"
+msgstr "Имеющиеся шаблоны"
+
+#: .\templates\templatesadmin\overview.html.py:34
+msgid "File"
+msgstr "Файл"
+
+#: .\templates\templatesadmin\overview.html.py:35
+msgid "Modified"
+msgstr "Изменён"
+
+#: .\templates\templatesadmin\overview.html.py:42
+msgid "(read only)"
+msgstr "(Только чтение)"
+
+#: .\templates\templatesadmin\overview.html.py:44
+msgid "DATETIME_FORMAT"
+msgstr "DATETIME_FORMAT"

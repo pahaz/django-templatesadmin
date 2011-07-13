@@ -51,10 +51,13 @@ class SvnCommitHook( TemplatesAdminHook ):
             finally:
                 proc.stderr.close()
 
+            msg = stderr_value.decode('utf-8').rstrip()
             if status != 0:
-                raise TemplatesAdminException("Error while executing %s: %s" % (command, stderr_value.rstrip(), ))
+                raise TemplatesAdminException(_("Error while executing %(command)s: %(msg)s") % dict(
+                                                command=command, 
+                                                msg=msg))
 
-            return stdout_value.rstrip()
+            return msg
 
         finally:
             # Close and delete commit-message file. 

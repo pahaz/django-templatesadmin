@@ -54,10 +54,13 @@ class GitCommitHook(TemplatesAdminHook):
         finally:
             proc.stderr.close()
 
+        msg = stderr_value.decode(enc).rstrip()
         if status != 0:
-            raise TemplatesAdminException("Error while executing %s: %s" % (command, stderr_value.decode(enc).rstrip(), ))
+            raise TemplatesAdminException(_("Error while executing %(command)s: %(msg)s") % dict(
+                                            command=command, 
+                                            msg=msg))
 
-        return stdout_value.rstrip().decode(enc)
+        return msg
 
     @classmethod
     def contribute_to_form(cls, template_path):
