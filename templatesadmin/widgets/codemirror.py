@@ -52,6 +52,9 @@ class CodeMirrorEditor( forms.Textarea ):
         var foldFunc = CodeMirror.newFoldFunction(CodeMirror.braceRangeFinder);
 
         CodeMirror.modeURL = "%(CODEEDITOR_MEDIA_URL)smode/%%N/%%N.js";
+        CodeMirror.commands.autocomplete = function(cm) {
+            CodeMirror.simpleHint(cm, CodeMirror.javascriptHint);
+        }
 
         var editor_%(name)s = CodeMirror.fromTextArea(document.getElementById('id_%(name)s'), {
             lineNumbers: true,
@@ -85,7 +88,8 @@ class CodeMirrorEditor( forms.Textarea ):
                 },
                 "Ctrl-H": function(cm){
                     alert("        Ctrl-F / Cmd-F \\n             Start searching \\n         Ctrl-G / Cmd-G \\n             Find next \\n         Shift-Ctrl-G / Shift-Cmd-G \\n             Find previous \\n         Shift-Ctrl-F / Cmd-Option-F \\n             Replace \\n         Shift-Ctrl-R / Shift-Cmd-Option-F \\n             Replace all \\n         Ctrl-q \\n             Fold a block");
-                }
+                },
+                "Ctrl-Space": "autocomplete"
             },
             autofocus: true
 
@@ -146,10 +150,13 @@ class CodeMirrorEditor( forms.Textarea ):
                                  urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'] , 'lib/util/formatting.js'),
                                  urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'] , 'lib/util/search.js'),
                                  urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'] , 'lib/util/dialog.js'),
+                                 urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'] , 'lib/util/simple-hint.js'),
+                                 urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'] , 'lib/util/javascript-hint.js'),
                                 ),
                             css={ 'all': (
                                 urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'] , 'lib/codemirror.css'),
                                 urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'] , 'lib/util/dialog.css'),
+                                urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'] , 'lib/util/simple-hint.css'),
                                 # other theme in theme folder!
                                 )})
 
