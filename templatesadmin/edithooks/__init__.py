@@ -1,4 +1,3 @@
-from templatesadmin.forms import TemplateForm
 
 class TemplatesAdminHook(object):
     '''

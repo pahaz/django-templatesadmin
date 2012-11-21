@@ -16,7 +16,7 @@ from django.template.loaders.app_directories import app_template_dirs
 from django.utils.translation import ugettext as _
 from django.views.decorators.cache import never_cache
 
-from templatesadmin.forms import TemplateForm ,  RichTemplateForm
+from templatesadmin.forms import CodemirrorForm, CodemirrorFormHtml
 from templatesadmin.models import FTemplate 
 from templatesadmin import TemplatesAdminException
 from django.contrib import messages
@@ -44,12 +44,6 @@ TEMPLATESADMIN_HIDE_READONLY = getattr(
     settings,
     'TEMPLATESADMIN_HIDE_READONLY',
     False
-)
-
-TEMPLATESADMIN_USE_RICHEDITOR = getattr(
-    settings,
-    'TEMPLATESADMIN_USE_RICHEDITOR',
-    True 
 )
 
 if str == type(TEMPLATESADMIN_EDITHOOKS):
@@ -134,11 +128,10 @@ def listing(request,
 def modify(request,
            path,
            template_name='templatesadmin/edit.html',
-           base_form=TemplateForm,
+           formclass=CodemirrorFormHtml,
            available_template_dirs=TEMPLATESADMIN_TEMPLATE_DIRS):
 
     template_path = _fixpath(path)
-    base_form = (TEMPLATESADMIN_USE_RICHEDITOR and RichTemplateForm or TemplateForm)
 
     # Check if file is within template-dirs
     if not any([template_path.startswith(templatedir) for templatedir in available_template_dirs]):
@@ -146,13 +139,12 @@ def modify(request,
         return HttpResponseRedirect(reverse('admin:templatesadmin_ftemplate_changelist'))
 
     if request.method == 'POST':
-        formclass = base_form
         for hook in TEMPLATESADMIN_EDITHOOKS:
             formclass.base_fields.update(hook.contribute_to_form(template_path))
 
         form = formclass(
                 data=request.POST,
-                widget_syntax = os.path.splitext(path)[1][1:]
+                #widget_syntax = os.path.splitext(path)[1][1:]
         )
         if form.is_valid():
             content = form.cleaned_data['content']
@@ -212,13 +204,12 @@ def modify(request,
     else:
         template_file = codecs.open(template_path, 'r', 'utf-8').read()
 
-        formclass = base_form 
         for hook in TEMPLATESADMIN_EDITHOOKS:
             formclass.base_fields.update(hook.contribute_to_form(template_path))
 
         form = formclass(
             initial={'content': template_file},
-            widget_syntax = os.path.splitext(path)[1][1:]
+            #widget_syntax = os.path.splitext(path)[1][1:]
         )
 
     template_context = {
