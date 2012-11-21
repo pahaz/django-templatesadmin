@@ -55,10 +55,7 @@ There are some settings that you can override in your ``settings.py``:
 
    Default: All user-defined and application template-dirs.
 
-4. ``TEMPLATEADMIN_USE_RICHEDITOR``: A boolean to use rich CodeMirror -  
-``http://marijn.haverbeke.nl/codemirror/`` editor.
-    
-    Default: ``True``
+4. ``TEMPLATEADMIN_USE_RICHEDITOR``: is deleted! Default use CodeMirror editor.
 
 5. ``TEMPLATESADMIN_HIDE_READONLY``: A boolean to wether enable or disable
    displaying of read-only templates.
@@ -96,6 +93,13 @@ See ``LICENSE`` for details.
 
 Changelog:
 ==========
+
+**v0.75 (2012-11-21)
+
+* Django 1.5 ready.
+* Change editor on Codemirror v 2.36: (http://codemirror.net/).
+* Add cool addons for editor.
+* Deleted: TemplateForm and RechTemplateForm.
 
 **v0.65 (2010-05-19)**
 
