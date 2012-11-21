@@ -1,6 +1,5 @@
-===============
-Templates Admin
-===============
+# Templates Admin #
+---------------
 
 Templates Admin is a tiny, nifty application for your Django_ project to edit
 your templates, that are stored on your disk, via an admin interface.
@@ -10,8 +9,7 @@ Originally this app was inspired by dbtemplates_.
 .. _Django: http://www.djangoproject.com/
 .. _dbtemplates: http://code.google.com/p/django-dbtemplates/
 
-Installation:
-=============
+# Installation: #
 
 1. Put ``templatesadmin`` into your INSTALLED_APPS setting.
 
@@ -26,8 +24,7 @@ Installation:
 4. Point your webbrowser to ``http://localhost/admin/templatesadmin/`` and start 
    editing.
    
-Optional Settings:
-==================
+# Optional Settings: #
 
 There are some settings that you can override in your ``settings.py``:
 
@@ -85,14 +82,12 @@ There are some settings that you can override in your ``settings.py``:
     )
    
 
-LICENSE:
-========
+# LICENSE: #
 
 This application is licensed under the ``Beerware License``.
 See ``LICENSE`` for details.
 
-Changelog:
-==========
+# Changelog: #
 
 **v0.75 (2012-11-21)
 
