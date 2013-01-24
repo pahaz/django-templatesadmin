@@ -1,6 +1,7 @@
 {% extends "admin/base_site.html" %}
 
 {% block extrahead %}
+<!-- -->
 <script type="text/javascript">
 /* <![CDATA[ */
 (function() {
@@ -17,6 +18,37 @@
   }
 })();
 /* ]]> */
+</script>
+
+<!-- ajax save -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
+<script src="http://malsup.github.com/jquery.form.js"></script>
+
+<script>
+    var options = {
+        'success': function code_updated() {
+            alert("Code updated!");
+        },
+        'beforeSerialize': function(arr, $form, options) {
+            console.log('SAVE!');
+            editor_content.save();
+        }
+    };
+
+    $(document).ready(function() {
+        $('#site_form').ajaxForm(options);
+
+        document.addEventListener("keydown", function(e) {
+            if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+                e.preventDefault();
+                console.log('ctrl-s detect!');
+                $('#site_form').ajaxSubmit(options);
+            }
+        }, false);
+
+        $('#content-main').prepend('<span>Save <b>Ctrl+s</b>! Help <b>Ctrl+h</b>!</span>');
+    });
+
 </script>
 {% endblock %}
 
