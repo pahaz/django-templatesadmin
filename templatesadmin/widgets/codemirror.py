@@ -6,7 +6,7 @@ from django.utils.html       import escape, conditional_escape
 from django.utils.encoding   import StrAndUnicode, force_unicode
 
 from django.forms.util import flatatt
-from urlparse import urljoin 
+from urlparse import urljoin
 
 class CodeMirrorEditor( forms.Textarea ):
     """
@@ -46,6 +46,47 @@ class CodeMirrorEditor( forms.Textarea ):
 
 </style>
 <script type="text/javascript">
+
+    // for detect extension
+    function get_extension() {
+        var z = window.location.href.toString().split(window.location.host)[1].replace(/^\\+|\/+$/g,'').split('.');
+        var extend = z[z.length-1];
+        return extend;
+    }
+    function get_syntax_mode(ext, def) {
+        var exts = {
+            'html': 'htmlmixed',
+            'js': 'javascript',
+            'css': 'css',
+        };
+        if (!def) {
+            def = 'htmlmixed';
+        }
+
+        var use = exts[ext];
+        if (use) return use;
+        else return def;
+    }
+
+    function changeMode(editor, mdoe) {
+       editor.setOption("mode", mdoe);
+       CodeMirror.autoLoadMode(editor, mdoe);
+    }
+
+    function getSelectedRange(editor) {
+        return { from: editor.getCursor(true), to: editor.getCursor(false) };
+    }
+
+    function autoFormatSelection(editor) {
+        var range = getSelectedRange();
+        editor.autoFormatRange(range.from, range.to);
+    }
+
+    function commentSelection(editor, isComment) {
+        var range = getSelectedRange();
+        editor.commentRange(isComment, range.from, range.to);
+    }
+
     window.onload = function(e){
 
         var foldFunc_html = CodeMirror.newFoldFunction(CodeMirror.tagRangeFinder);
@@ -94,29 +135,13 @@ class CodeMirrorEditor( forms.Textarea ):
             autofocus: true
 
         });
-
         var hlLine_%(name)s = editor_%(name)s.setLineClass(0, "activeline");
 
-        changeMode(editor_%(name)s, "%(syntax)s");
+        window.editor_%(name)s = editor_%(name)s; // export;
 
-        function changeMode(editor, mdoe) {
-           editor.setOption("mode", mdoe);
-           CodeMirror.autoLoadMode(editor, mdoe);
-        }
-
-        function getSelectedRange(editor) {
-            return { from: editor.getCursor(true), to: editor.getCursor(false) };
-        }
-
-        function autoFormatSelection(editor) {
-            var range = getSelectedRange();
-            editor.autoFormatRange(range.from, range.to);
-        }
-
-        function commentSelection(editor, isComment) {
-            var range = getSelectedRange();
-            editor.commentRange(isComment, range.from, range.to);
-        }
+        var syntax_mode = get_syntax_mode(get_extension(), "%(syntax)s");
+        changeMode(editor_%(name)s, syntax_mode);
+        console.log('for "editor_%(name)s" use "' + syntax_mode + '" mode');
     };
 </script>
 """ 
