@@ -7,7 +7,8 @@
 <div class="breadcrumbs">
      <a href="{% url admin:index %}">{% trans "Home" %}</a> &rsaquo;
      <a href="{% url admin:app_list 'templatesadmin' %}">{{ opts.verbose_name_plural|capfirst }}</a> &rsaquo;
-     {% trans 'File Selection' %}
+    <a href="{% url 'templatesadmin-overview' %}">{% trans "Home" %}</a> &rsaquo;
+    {% trans "File selection" %}
 </div>
 {% endblock %}
 
@@ -41,6 +42,7 @@
                     <td style="width: 99%;">
                         {% if not template.writeable %}<img src="{{ STATIC_URL }}admin/img/icon-no.gif" alt="{% trans "(read only)" %}" title="{% trans "This template is not writeable." %}" />{% endif %}
                         <a href="{% url admin:templatesadmin_ftemplate_change template.abspath %}">{{ template.abspath|shortenfilepath }}</a></td>
+                        <a href="{% url 'templatesadmin-edit' template.abspath %}">{{ template.abspath|shortenfilepath }}</a></td>
                     <td style="white-space: nowrap;" class="r">{{ template.modified|date:_("DATETIME_FORMAT") }}</td>
                 </tr>
     {% endfor %}
