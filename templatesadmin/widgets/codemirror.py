@@ -32,11 +32,6 @@ class CodeMirrorEditor( forms.Textarea ):
 
     CODEEDITOR_JS = """
 <style>
-    .CodeMirror-scroll {
-      height: auto;
-      overflow-y: hidden;
-      overflow-x: auto;
-    }
 
     .CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}
     .activeline {background: #e8f2ff !important;}
