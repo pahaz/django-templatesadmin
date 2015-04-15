@@ -29,8 +29,12 @@
     var options = {
         'success': function code_updated(data, status, xhr) {
             Last_Responce = data;
-            var rez = $(data).html().find('.error').text();
-            alert("Code updated! \n" + rez);
+            var errors = $(data).find('.errorlist, .error');
+            if (errors.length == 0) {
+                alert("Code updated!");
+            } else {
+                alert("Update failed!\n" + errors.text());
+            };
         },
         'beforeSerialize': function(arr, $form, options) {
             console.log('SAVE!');
