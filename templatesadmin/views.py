@@ -12,7 +12,6 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.template.loaders.app_directories import app_template_dirs
 from django.utils.translation import ugettext as _
 from django.views.decorators.cache import never_cache
 
@@ -20,6 +19,12 @@ from templatesadmin.forms import CodemirrorForm, CodemirrorFormHtml
 from templatesadmin.models import FTemplate 
 from templatesadmin import TemplatesAdminException
 from django.contrib import messages
+
+try:
+    from django.template.loaders.app_directories import app_template_dirs
+except:
+    from django.template.utils import get_app_template_dirs
+    app_template_dirs = get_app_template_dirs('templates')
 
 # Default settings that may be overriden by global settings (settings.py)
 TEMPLATESADMIN_VALID_FILE_EXTENSIONS = getattr(
