@@ -3,7 +3,7 @@ from django.conf import settings
 
 from django.utils.safestring import mark_safe
 from django.utils.html       import escape, conditional_escape
-from django.utils.encoding   import force_unicode
+from django.utils.encoding   import force_text
 
 try:
     from django.utils.encoding import StrAndUnicode
@@ -16,7 +16,7 @@ except ImportError:
             return self.code
 
 from django.forms.util import flatatt
-from urlparse import urljoin
+from urllib.parse import urljoin
 
 class CodeMirrorEditor( forms.Textarea ):
     """
@@ -160,7 +160,7 @@ class CodeMirrorEditor( forms.Textarea ):
         # Build textarea first
         if value is None: value = ''
         text_attrs    = self.build_attrs( attrs , name=name )
-        textarea_html =  u'<textarea%s>%s</textarea>' % (flatatt(text_attrs), conditional_escape(force_unicode(value)))
+        textarea_html =  '<textarea%s>%s</textarea>' % (flatatt(text_attrs), conditional_escape(force_text(value)))
         codeeditor_html = self.CODEEDITOR_JS % dict(name=name , **self.editor_attrs)
 
         return mark_safe( '\n'.join([textarea_html , codeeditor_html ]) )

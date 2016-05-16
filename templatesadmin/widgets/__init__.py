@@ -1,1 +1,1 @@
-from codemirror import CodeMirrorEditor
+from .codemirror import CodeMirrorEditor

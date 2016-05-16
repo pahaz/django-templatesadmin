@@ -62,7 +62,7 @@ for path in TEMPLATESADMIN_EDITHOOKS:
     module, attr = path[:i], path[i+1:]
     try:
         mod = __import__(module, {}, {}, [attr])
-    except ImportError, e:
+    except ImportError as e:
         raise ImproperlyConfigured('Error importing edithook module %s: "%s"' % (module, e))
     try:
         func = getattr(mod, attr)
@@ -159,7 +159,7 @@ def modify(request,
                     pre_save_notice = hook.pre_save(request, form, template_path)
                     if pre_save_notice:
                         messages.warning(request, message=pre_save_notice)
-            except TemplatesAdminException, e:
+            except TemplatesAdminException as e:
                 messages.error(request, message=e.message)
                 return HttpResponseRedirect(request.build_absolute_uri())
 
@@ -175,7 +175,7 @@ def modify(request,
                 # content is in dos-style lineending, will be converted in next step
                 if (file_content[-1] == '\n' or file_content[:-2] == '\r\n') \
                    and content[:-2] != '\r\n':
-                    content = u"%s\r\n" % content
+                    content = "%s\r\n" % content
 
                 # Template is saved in unix-style, save in unix style.
                 if None == search("\r\n", file_content):
@@ -184,7 +184,7 @@ def modify(request,
                 f = codecs.open(template_path, 'w', 'utf-8')
                 f.write(content)
                 f.close()
-            except IOError, e:
+            except IOError as e:
                 messages.error(request, 
                     message=_('Template "%(path)s" has not been saved! Reason: %(errormsg)s') % {
                         'path': path,
@@ -198,7 +198,7 @@ def modify(request,
                     post_save_notice = hook.post_save(request, form, template_path)
                     if post_save_notice:
                         messages.info(request, message=post_save_notice)
-            except TemplatesAdminException, e:
+            except TemplatesAdminException as e:
                 messages.error(request, message=e.message)
                 return HttpResponseRedirect(request.build_absolute_uri())
 
