@@ -1,6 +1,6 @@
 from django import forms
 from django.forms.forms import DeclarativeFieldsMetaclass 
-from widgets import CodeMirrorEditor
+from .widgets import CodeMirrorEditor
 
 class CodemirrorForm( forms.Form ):
     """

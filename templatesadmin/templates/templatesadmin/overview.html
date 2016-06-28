@@ -1,13 +1,13 @@
 {% extends "templatesadmin/base.html" %}
 
-{% load i18n %}
+{% load i18n static %}
 {% load templatesadmin_tags %}
 
 {% block breadcrumbs %}
 <div class="breadcrumbs">
-     <a href="{% url admin:index %}">{% trans "Home" %}</a> &rsaquo;
-     <a href="{% url admin:app_list 'templatesadmin' %}">{{ opts.verbose_name_plural|capfirst }}</a> &rsaquo;
-     {% trans 'File Selection' %}
+     <a href="{% url 'admin:index' %}">{% trans "Home" %}</a> &rsaquo;
+     <a href="{% url 'admin:app_list' 'templatesadmin' %}">{{ opts.verbose_name_plural|capfirst }}</a> &rsaquo;
+    {% trans "File selection" %}
 </div>
 {% endblock %}
 
@@ -39,8 +39,8 @@
         {% endifchanged %}
                 <tr class="{% cycle row1,row2 %}">
                     <td style="width: 99%;">
-                        {% if not template.writeable %}<img src="{{ STATIC_URL }}admin/img/icon-no.gif" alt="{% trans "(read only)" %}" title="{% trans "This template is not writeable." %}" />{% endif %}
-                        <a href="{% url admin:templatesadmin_ftemplate_change template.abspath %}">{{ template.abspath|shortenfilepath }}</a></td>
+                        {% if not template.writeable %}<img src="{% static 'admin/img/icon-no.gif' %}" alt="{% trans "(read only)" %}" title="{% trans "This template is not writeable." %}" />{% endif %}
+                        <a href="{% url 'admin:templatesadmin_ftemplate_change' template.abspath %}">{{ template.abspath|shortenfilepath }}</a></td>
                     <td style="white-space: nowrap;" class="r">{{ template.modified|date:_("DATETIME_FORMAT") }}</td>
                 </tr>
     {% endfor %}

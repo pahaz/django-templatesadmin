@@ -3,10 +3,20 @@ from django.conf import settings
 
 from django.utils.safestring import mark_safe
 from django.utils.html       import escape, conditional_escape
-from django.utils.encoding   import StrAndUnicode, force_unicode
+from django.utils.encoding   import force_text
+
+try:
+    from django.utils.encoding import StrAndUnicode
+except ImportError:
+    from django.utils.encoding import python_2_unicode_compatible
+
+    @python_2_unicode_compatible
+    class StrAndUnicode:
+        def __str__(self):
+            return self.code
 
 from django.forms.util import flatatt
-from urlparse import urljoin
+from urllib.parse import urljoin
 
 class CodeMirrorEditor( forms.Textarea ):
     """
@@ -32,11 +42,6 @@ class CodeMirrorEditor( forms.Textarea ):
 
     CODEEDITOR_JS = """
 <style>
-    .CodeMirror-scroll {
-      height: auto;
-      overflow-y: hidden;
-      overflow-x: auto;
-    }
 
     .CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}
     .activeline {background: #e8f2ff !important;}
@@ -55,7 +60,7 @@ class CodeMirrorEditor( forms.Textarea ):
     }
     function get_syntax_mode(ext, def) {
         var exts = {
-            'html': 'htmlmixed',
+            'html': 'django',
             'js': 'javascript',
             'css': 'css',
         };
@@ -98,8 +103,11 @@ class CodeMirrorEditor( forms.Textarea ):
         }
 
         var editor_%(name)s = CodeMirror.fromTextArea(document.getElementById('id_%(name)s'), {
-            lineNumbers: true,
+
             indentUnit: 4,
+            matchBrackets: true,
+            lineNumbers: true,
+            autoCloseBrackets: true,
             tabMode: "shift",
             onGutterClick: function(cm, n) { // FOR BREACKPINTS
                 var info = cm.lineInfo(n);
@@ -109,33 +117,24 @@ class CodeMirrorEditor( forms.Textarea ):
                 else
                     cm.setMarker(n, "<span style='color: #900'>!</span> %%N%%");
 
-                foldFunc(cm, cm.getCursor().line);
-                foldFunc_html(cm, cm.getCursor().line);
+                 foldFunc(cm, cm.getCursor().line);
+                 foldFunc_html(cm, cm.getCursor().line);
 
             },
             lineWrapping: true,
-            onCursorActivity: function() {
-                editor_%(name)s.matchHighlight("CodeMirror-matchhighlight");
-
-
-                editor_%(name)s.setLineClass(hlLine_%(name)s, null, null);
-                hlLine_%(name)s = editor_%(name)s.setLineClass(editor_%(name)s.getCursor().line, null, "activeline");
-
-            },
-            extraKeys: {
+            styleActiveLine: true,
+              extraKeys: {
                 "Ctrl-Q": function(cm){
-                    foldFunc(cm, cm.getCursor().line);
-                    foldFunc_html(cm, cm.getCursor().line);
+                     foldFunc(cm, cm.getCursor().line);
+                     foldFunc_html(cm, cm.getCursor().line);
                 },
                 "Ctrl-H": function(cm){
                     alert("        Ctrl-F / Cmd-F \\n             Start searching \\n         Ctrl-G / Cmd-G \\n             Find next \\n         Shift-Ctrl-G / Shift-Cmd-G \\n             Find previous \\n         Shift-Ctrl-F / Cmd-Option-F \\n             Replace \\n         Shift-Ctrl-R / Shift-Cmd-Option-F \\n             Replace all \\n         Ctrl-q \\n             Fold a block");
                 },
                 "Ctrl-Space": "autocomplete"
             },
-            autofocus: true
 
         });
-        var hlLine_%(name)s = editor_%(name)s.setLineClass(0, "activeline");
 
         window.editor_%(name)s = editor_%(name)s; // export;
 
@@ -144,7 +143,7 @@ class CodeMirrorEditor( forms.Textarea ):
         console.log('for "editor_%(name)s" use "' + syntax_mode + '" mode');
     };
 </script>
-""" 
+"""
 
     editor_attrs = {
                     'CODEEDITOR_MEDIA_URL': urljoin( settings.STATIC_URL , 'templatesadmin/codemirror/' ),
@@ -154,35 +153,47 @@ class CodeMirrorEditor( forms.Textarea ):
     def __init__(self, attrs=None):
         if attrs:
             self.editor_attrs.update(attrs)
-        
+
         super(CodeMirrorEditor, self).__init__({'rows': '10','cols': '40'})
 
     def render(self, name, value, attrs=None):
         # Build textarea first
         if value is None: value = ''
         text_attrs    = self.build_attrs( attrs , name=name )
-        textarea_html =  u'<textarea%s>%s</textarea>' % (flatatt(text_attrs), conditional_escape(force_unicode(value)))
+        textarea_html =  '<textarea%s>%s</textarea>' % (flatatt(text_attrs), conditional_escape(force_text(value)))
         codeeditor_html = self.CODEEDITOR_JS % dict(name=name , **self.editor_attrs)
 
         return mark_safe( '\n'.join([textarea_html , codeeditor_html ]) )
 
     def _media(self):
-        return forms.Media( js=( urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'] , 'lib/codemirror.js') ,
-                                 urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'] , 'lib/util/searchcursor.js'),
-                                 urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'] , 'lib/util/match-highlighter.js'),
-                                 urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'] , 'lib/util/foldcode.js'),
-                                 urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'] , 'lib/util/loadmode.js'),
-                                 urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'] , 'lib/util/formatting.js'),
-                                 urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'] , 'lib/util/search.js'),
-                                 urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'] , 'lib/util/dialog.js'),
-                                 urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'] , 'lib/util/simple-hint.js'),
-                                 urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'] , 'lib/util/javascript-hint.js'),
-                                ),
-                            css={ 'all': (
-                                urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'] , 'lib/codemirror.css'),
-                                urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'] , 'lib/util/dialog.css'),
-                                urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'] , 'lib/util/simple-hint.css'),
-                                # other theme in theme folder!
-                                )})
+        return forms.Media(
+            js=(
+                urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'], 'lib/codemirror.js'),
+                # urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'], 'addon/dialog/dialog.js'), # Disabled because not working in search.js (auto-closed on lost focus)
+                urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'], 'addon/search/searchcursor.js'),
+                urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'], 'addon/search/search.js'),
+                urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'], 'addon/search/match-highlighter.js'),
+                urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'], 'addon/fold/foldcode.js'),
+                urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'], 'addon/mode/loadmode.js'),
+                urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'], 'addon/edit/matchbrackets.js'),
+                urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'], 'addon/edit/closebrackets.js'),
+                urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'], 'addon/edit/matchtags.js'),
+                urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'], 'addon/selection/active-line.js'),
 
-    media  = property(_media)
+
+                urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'], 'addon/mode/overlay.js'),
+                urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'], 'mode/xml/xml.js'),
+                urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'], 'mode/htmlmixed/htmlmixed.js'),
+                urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'], 'mode/django/django.js'),
+                urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'], 'mode/javascript/javascript.js'),
+                urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'], 'mode/css/css.js'),
+            ),
+            css={
+                'all': (
+                    urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'] , 'lib/codemirror.css'),
+                    urljoin(self.editor_attrs['CODEEDITOR_MEDIA_URL'] , 'addon/dialog/dialog.css'),
+                )
+            }
+        )
+
+    media = property(_media)
