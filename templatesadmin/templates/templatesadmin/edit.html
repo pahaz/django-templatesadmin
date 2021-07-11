@@ -1,6 +1,6 @@
 {% extends "templatesadmin/base.html" %}
 
-{% load i18n %}
+{% load i18n admin_modify static %}
 {% load templatesadmin_tags %}
 
 {% block extrahead %}
@@ -11,7 +11,7 @@
 
 {% block extrastyle %}
     {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}admin/css/forms.css" />
+    <link rel="stylesheet" type="text/css" href="{% static 'admin/css/forms.css' %}" />
     <style type="text/css">
         textarea#id_content{
             width: 99%;
@@ -26,8 +26,8 @@
 <div class="breadcrumbs">
      <a href="{% url 'admin:index' %}">{% trans "Home" %}</a> &rsaquo;
      <a href="{% url 'admin:app_list' 'templatesadmin' %}">{{ opts.verbose_name_plural|capfirst }}</a> &rsaquo;
-     <a href="{% url 'admin:templatesadmin_ftemplate_changelist' %}">{{ opts.app_label|capfirst }}</a> &rsaquo;
-     {{ template_path }}
+    <a href="{% url 'templatesadmin-overview' %}">{% trans "File selection" %}</a> &rsaquo;
+    {{ template_path }}
 </div>
 {% endblock %}
 

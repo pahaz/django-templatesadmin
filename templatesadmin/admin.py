@@ -1,6 +1,6 @@
 from django.contrib import admin
-from django.conf.urls.defaults import patterns,url
-from django.utils.functional import update_wrapper
+from django.conf.urls import *
+from functools import update_wrapper
 from django.contrib.admin.sites import AdminSite
 
 from django.utils.translation import ugettext as _
